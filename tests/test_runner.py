@@ -162,7 +162,7 @@ class RunnerTests(unittest.TestCase):
 class ConfigModulesTests(unittest.TestCase):
     def test_core_yaml_modules_build_without_loading(self):
         modules = build_modules(load_config("config/core.yaml"))
-        self.assertEqual([m.detector.name for m in modules], ["hazard_object", "smoking"])
+        self.assertEqual([m.detector.name for m in modules], ["hazard_object", "hazard_knife", "smoking"])
         self.assertEqual(modules[1].detector.run_every_n_frames, 2)
 
     def test_demo_camera_and_hazard_input_size(self):

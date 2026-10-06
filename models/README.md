@@ -60,5 +60,5 @@
 | Dataset | COCO val2017 (replay) + HOD knife + Sohas (มีดในมือ + hard negatives) รายละเอียด/License: `docs/eval/hazard_v1_dataset.md` |
 | Training args | epochs 40, imgsz 960, batch 16, freeze 0, SGD lr0 0.002, scale 0.9, seed 0 |
 | SHA-256 / ผลวัด | อยู่ใน `hazard_v1_full.train_info.json` และ `docs/eval/hazard_v1_full_eval.md` ที่ได้จาก Colab |
-| สถานะ | **ยังไม่ใช่ค่าเริ่มต้น** ต้องดูผลบน test (ภาพเว็บ) แล้ววัดบนคลิป QA ชุด s2 ก่อนเปลี่ยน `weights` ใน `config/core.yaml` |
+| สถานะ | **ไม่ใช่ค่าเริ่มต้น**: มีด AP +49 จุด แต่กรรไกร −33 จุด (`docs/eval/hazard_v1_full_eval.md`) ใช้เฉพาะเมื่อเน้นมีด |
 | License | AGPL-3.0 (Ultralytics); ข้อมูล HOD ใช้เพื่อการวิจัยเท่านั้น |

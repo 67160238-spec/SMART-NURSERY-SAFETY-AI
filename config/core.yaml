@@ -54,6 +54,27 @@ modules:
         # child_ratio: สูงไม่ถึงกี่เท่าของผู้ใหญ่ที่ยืนจุดเดียวกัน = เด็ก (เด็ก 2-6 ขวบ ประมาณ 0.5-0.75)
         params: {zones_file: "config/zones.yaml", min_confidence: 0.4, child_ratio: 0.75}
 
+  # Knife: fine-tuned v1 model (knife images caught 89% vs 33% for yolo11n) but worse on scissors,
+  # so v1 looks for "knife" only; scissors + person still come from yolo11n above.
+  # Results: docs/eval/hazard_v1_full_eval.md. Turn off with enabled: false (runs every 2nd frame for FPS).
+  - detector:
+      class: "src.detectors.hazard_object:HazardObjectDetector"
+      params:
+        name: hazard_knife
+        weights: "models/hazard/hazard_v1_full.pt"
+        target_classes: [knife]
+        conf: 0.25
+        imgsz: 960
+        nms_iou: 0.5
+        run_every_n_frames: 2
+    policy:
+      class: "src.cctv_core.events.policies:LabelMatchPolicy"
+      params:
+        event_type: hazard_object
+        labels: [knife]
+        min_confidence: 0.25
+        persistence: {enabled: true, min_frames: 2, window_s: 1.0, max_shift: 1.5}
+
   - detector:
       class: "src.detectors.smoking:SmokingDetector"
       params: {weights: "models/smoking/best.pt", conf: 0.5, run_every_n_frames: 2}

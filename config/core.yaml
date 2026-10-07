@@ -54,24 +54,27 @@ modules:
         # child_ratio: สูงไม่ถึงกี่เท่าของผู้ใหญ่ที่ยืนจุดเดียวกัน = เด็ก (เด็ก 2-6 ขวบ ประมาณ 0.5-0.75)
         params: {zones_file: "config/zones.yaml", min_confidence: 0.4, child_ratio: 0.75}
 
-  # Knife: fine-tuned v1 model (knife images caught 89% vs 33% for yolo11n) but worse on scissors,
-  # so v1 looks for "knife" only; scissors + person still come from yolo11n above.
-  # Results: docs/eval/hazard_v1_full_eval.md. Turn off with enabled: false (runs every 2nd frame for FPS).
+  # Knife + scissors: fine-tuned v2 model (models/hazard/hazard_v2.pt, results docs/eval/hazard_v2_eval.md).
+  # v2 keeps v1's knife gain (knife AP +50 pts vs yolo11n) and recovers scissors to the yolo11n level;
+  # with zoom it holds up far better at distance (objects 4x smaller: image recall 64% vs 52% for v1, 9% yolo11n).
+  # Person still comes from yolo11n above (v2 person AP is ~5 pts lower). Its scissors/knife boxes are added
+  # to the same hazard_object event. Turn off with enabled: false (runs every 2nd frame for FPS).
   - detector:
       class: "src.detectors.hazard_object:HazardObjectDetector"
       params:
         name: hazard_knife
-        weights: "models/hazard/hazard_v1_full.pt"
-        target_classes: [knife]
+        weights: "models/hazard/hazard_v2.pt"
+        target_classes: [person, knife, scissors]
         conf: 0.25
         imgsz: 960
         nms_iou: 0.5
         run_every_n_frames: 2
+        zoom: {enabled: true, max_crops: 3, max_person_height: 0.6, crop_imgsz: 640, every_n: 2}
     policy:
       class: "src.cctv_core.events.policies:LabelMatchPolicy"
       params:
         event_type: hazard_object
-        labels: [knife]
+        labels: [knife, scissors]
         min_confidence: 0.25
         persistence: {enabled: true, min_frames: 2, window_s: 1.0, max_shift: 1.5}
 

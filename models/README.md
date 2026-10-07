@@ -62,3 +62,13 @@
 | SHA-256 / ผลวัด | อยู่ใน `hazard_v1_full.train_info.json` และ `docs/eval/hazard_v1_full_eval.md` ที่ได้จาก Colab |
 | สถานะ | **ไม่ใช่ค่าเริ่มต้น**: มีด AP +49 จุด แต่กรรไกร −33 จุด (`docs/eval/hazard_v1_full_eval.md`) ใช้เฉพาะเมื่อเน้นมีด |
 | License | AGPL-3.0 (Ultralytics); ข้อมูล HOD ใช้เพื่อการวิจัยเท่านั้น |
+
+## hazard_object v2 (fine-tune ต่อจาก v1) — `models/hazard/hazard_v2.pt`
+
+| หัวข้อ | รายละเอียด |
+|---|---|
+| ที่มา | `tools/run_v2_local.py` บน RTX 4060 (20 epochs, imgsz 960, เริ่มจาก v1) |
+| Dataset | hazard_full เดิม + COCO train2017 replay (กรรไกรทั้งหมด, มีด 1000, อื่นๆ 1000) + กรรไกร/มีดชิ้นเล็กแปะ 2000 ภาพ (`tools/make_small_objects.py`) |
+| SHA-256 | `ef841aacd746ae3f…` (เต็มใน `hazard_v2.train_info.json`) |
+| ผลวัด | `docs/eval/hazard_v2_eval.md`: มีดเท่า v1 (HOD 70.4, Sohas 90.1), กรรไกรกลับมาเท่า yolo11n (42.7 vs 44.8, v1 11.4), ของชิ้นเล็ก 23% (v1 0%), ระยะไกล x4 + zoom 64% (v1 52%) |
+| สถานะ | **ใช้ใน config/core.yaml** (module `hazard_knife`, คู่กับ yolo11n ที่ยังให้ person) false alarm ภาพเว็บ 3.9% (v1 3.3%, yolo11n 0.8%) ต้องทดสอบกับกล้องจริงก่อนใช้งานจริง |

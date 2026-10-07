@@ -498,9 +498,11 @@ def main() -> int:
               "- Sohas hard negatives (smartphone, purse, bill, card held in the hand) are in the "
               "false-alarm rate of the `sohas` rows."]
     text = "\n".join(lines) + "\n"
+    if hasattr(sys.stdout, "reconfigure"):  # Windows consoles/files default to cp1252
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     print(text)
     if args.out:
-        args.out.write_text(text)
+        args.out.write_text(text, encoding="utf-8")
         (args.out.with_suffix(".json")).write_text(json.dumps(
             {n: {str(k): v for k, v in t.items()} for n, t in thresholds.items()}, indent=2))
     return 0
